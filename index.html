@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Since Sean Left</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --card-bg: #12121a;
+            --card-border: #1e1e2e;
+            --text: #e0e0e8;
+            --text-muted: #8888a0;
+            --accent: #ff3366;
+            --accent-glow: rgba(255, 51, 102, 0.15);
+            --yellow: #ffc107;
+            --orange: #ff6b35;
+            --red: #ff2244;
+            --purple: #9b59b6;
+            --blue: #3498db;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Space Grotesk', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(255, 51, 102, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(155, 89, 182, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(255, 107, 53, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ─── Hero ─── */
+        .hero {
+            text-align: center;
+            padding: 2.5rem 0 1rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--orange), var(--yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+        }
+
+        .hero .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .hero .subtitle strong { color: var(--text); }
+
+        /* ─── Timer (compact) ─── */
+        .timer {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+        }
+
+        .timer .timer-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .timer .timer-value span { color: var(--accent); }
+
+        .timer .timer-sub {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* ─── Incident rate ─── */
+        .rate {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        .rate strong {
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* ─── Odds section ─── */
+        .odds-section {
+            background: linear-gradient(135deg, rgba(255, 51, 102, 0.08), rgba(155, 89, 182, 0.08));
+            border: 1px solid rgba(255, 51, 102, 0.2);
+            border-radius: 14px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .odds-section .odds-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+
+        .odds-grid {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .odds-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 100px;
+        }
+
+        .odds-item .odds-pct {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .odds-item .odds-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .odds-source {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.75rem;
+            opacity: 0.6;
+        }
+
+        .odds-source a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* ─── Day headers ─── */
+        .day-header {
+            position: relative;
+            margin: 2rem 0 1rem;
+            padding-left: 1.5rem;
+        }
+
+        .day-header h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .day-header .day-count {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent);
+            margin-left: 0.5rem;
+        }
+
+        .day-header::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            background: var(--accent);
+            border-radius: 50%;
+            border: 3px solid var(--bg);
+        }
+
+        /* ─── Timeline ─── */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent), var(--purple), var(--card-border));
+        }
+
+        /* ─── Event cards ─── */
+        .event-card {
+            position: relative;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s;
+            cursor: default;
+        }
+
+        .event-card:hover {
+            border-color: rgba(255, 51, 102, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transform: translateX(4px);
+        }
+
+        .event-card::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 1.5rem;
+            width: 8px;
+            height: 8px;
+            background: var(--card-border);
+            border-radius: 50%;
+            border: 2px solid var(--bg);
+        }
+
+        .event-card .event-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-card .event-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            line-height: 1.3;
+        }
+
+        .event-card .event-date {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .event-card .event-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+        }
+
+        .event-card .event-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        .tag {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .tag-scandal { background: rgba(255, 34, 68, 0.15); color: #ff5577; }
+        .tag-uturn { background: rgba(255, 193, 7, 0.15); color: #ffc107; }
+        .tag-resignation { background: rgba(155, 89, 182, 0.15); color: #bb88dd; }
+        .tag-broken-promise { background: rgba(255, 107, 53, 0.15); color: #ff8855; }
+        .tag-failure { background: rgba(52, 152, 219, 0.15); color: #55aaee; }
+        .tag-polls { background: rgba(46, 204, 113, 0.15); color: #55dd88; }
+        .tag-economic { background: rgba(241, 196, 15, 0.15); color: #f1c40f; }
+        .tag-security { background: rgba(231, 76, 60, 0.15); color: #e74c3c; }
+        .tag-hypocrisy { background: rgba(255, 51, 102, 0.15); color: #ff6699; }
+        .tag-crisis { background: rgba(192, 57, 43, 0.15); color: #e74c3c; }
+        .tag-press { background: rgba(52, 73, 94, 0.25); color: #aabbcc; }
+        .tag-rebellion { background: rgba(230, 126, 34, 0.15); color: #e67e22; }
+
+        /* ─── Bottom stats section ─── */
+        .bottom-stats {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .bottom-stats h3 {
+            text-align: center;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .counter-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .counter-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .counter-box .number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .counter-box .label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        /* ─── Filter bar (at bottom) ─── */
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .filter-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .filter-btn .count {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-left: 0.25rem;
+        }
+
+        /* ─── Footer ─── */
+        .footer {
+            text-align: center;
+            padding: 2rem 0 1rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .footer a { color: var(--accent); text-decoration: none; }
+
+        .footer .disclaimer {
+            font-size: 0.7rem;
+            margin-top: 0.5rem;
+            opacity: 0.5;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2.4rem; }
+            .timer .timer-value { font-size: 1.2rem; }
+            .container { padding: 1rem; }
+            .timeline { padding-left: 1.5rem; }
+            .day-header { padding-left: 1rem; }
+            .odds-item .odds-pct { font-size: 1.4rem; }
+            .counter-box { padding: 0.5rem 0.75rem; }
+            .counter-box .number { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>Since Sean Left</h1>
+            <p class="subtitle">Things that have gone wrong in UK government since <strong>Saturday 7 February 2026</strong></p>
+        </div>
+
+        <div class="timer">
+            <div class="timer-value" id="timer">Loading...</div>
+            <div class="timer-sub" id="timer-sub"></div>
+        </div>
+
+        <div class="rate" id="rate-line"></div>
+
+        <!-- Betting odds -->
+        <div class="odds-section">
+            <div class="odds-title">🎰 Will the PM survive?</div>
+            <div class="odds-grid">
+                <div class="odds-item">
+                    <div class="odds-pct">68%</div>
+                    <div class="odds-label">Gone by June</div>
+                </div>
+                <div class="odds-item">
+                    <div class="odds-pct">80%</div>
+                    <div class="odds-label">Gone this year</div>
+                </div>
+                <div class="odds-item">
+                    <div class="odds-pct">23%</div>
+                    <div class="odds-label">Approval rating</div>
+                </div>
+                <div class="odds-item">
+                    <div class="odds-pct">55%</div>
+                    <div class="odds-label">Public say resign</div>
+                </div>
+            </div>
+            <div class="odds-source">
+                Polymarket (68% by Jun 30) · Eurasia Group (80% this year) · Morning Consult (23% approval) · Opinium (55% should resign)
+            </div>
+        </div>
+
+        <!-- Timeline (the main event) -->
+        <div class="timeline" id="timeline"></div>
+
+        <!-- Bottom stats & categories -->
+        <div class="bottom-stats">
+            <h3>The Damage So Far</h3>
+            <div class="counter-grid" id="counter-grid"></div>
+            <div class="filter-bar" id="filter-bar">
+                <button class="filter-btn active" data-filter="all">All</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Chronicling the chaos since Sean left on 7 Feb 2026</p>
+            <p class="disclaimer">Events sourced from news reports. Presented with love and despair.</p>
+        </div>
+    </div>
+
+    <script>
+        const SEAN_LEFT = new Date('2026-02-07T00:00:00');
+
+        const events = [
+            {
+                date: '2026-02-07',
+                title: 'Labour Think Tank Caught Investigating Journalists',
+                desc: 'Labour Together paid PR firm APCO Worldwide at least £30,000 to build dossiers on journalists from The Sunday Times and The Guardian, identifying "points of leverage." The NUJ called it "deeply concerning."',
+                tags: ['scandal', 'press']
+            },
+            {
+                date: '2026-02-07',
+                title: 'Six Labour Figures Positioning to Replace Starmer',
+                desc: 'Bloomberg published an article naming six Labour figures already positioning themselves to replace a weakened Starmer. Not even subtle about it.',
+                tags: ['crisis']
+            },
+            {
+                date: '2026-02-07',
+                title: '91 Flood Warnings Across England',
+                desc: 'The Environment Agency issued 91 flood warnings and 263 flood alerts. The Met Office confirmed rain had fallen every single day of 2026 in south-west England. Every. Single. Day.',
+                tags: ['failure']
+            },
+            {
+                date: '2026-02-08',
+                title: 'Morgan McSweeney Resigns as Chief of Staff',
+                desc: 'Starmer\'s chief of staff quit, taking responsibility for advising the PM to appoint Mandelson as ambassador despite the Epstein connections. The architect leaves the building.',
+                tags: ['resignation', 'crisis']
+            },
+            {
+                date: '2026-02-08',
+                title: 'Eurasia Group: 80% Chance Starmer Out This Year',
+                desc: 'The geopolitical risk consultancy raised the probability of Starmer being removed from office this year to 80%, up from 65%. Bloomberg headline: "Premiership Teeters on Brink."',
+                tags: ['crisis', 'polls']
+            },
+            {
+                date: '2026-02-09',
+                title: 'Tim Allan Resigns as Communications Chief',
+                desc: 'Director of communications quit the day after McSweeney. Two top aides gone in 24 hours. The bunker empties.',
+                tags: ['resignation', 'crisis']
+            },
+            {
+                date: '2026-02-09',
+                title: 'Scottish Labour Leader Calls for Starmer to Resign',
+                desc: 'Anas Sarwar became the most senior Labour figure to publicly call for Starmer to quit: "The distraction needs to end." Starmer: "not prepared to walk away."',
+                tags: ['crisis', 'rebellion']
+            },
+            {
+                date: '2026-02-09',
+                title: 'Seven Labour MPs Publicly Call for Starmer to Go',
+                desc: 'Kim Johnson, Neil Duncan-Jordan, Jon Trickett, Kate Osborne, Brian Leishman, Rachael Maskell, and Ian Byrne all publicly called on Starmer to resign. The backbenches in open revolt.',
+                tags: ['rebellion', 'crisis']
+            },
+            {
+                date: '2026-02-09',
+                title: 'Trade Union Leaders Demand Leadership Change',
+                desc: 'FBU and TSSA general secretaries called for Starmer to go. Unite\'s Sharon Graham called the agenda "rudderless" and "austerity lite." The FBU warned all 11 affiliated unions could collectively tell him to step down.',
+                tags: ['rebellion', 'crisis']
+            },
+            {
+                date: '2026-02-09',
+                title: '55% of Public Say Starmer Should Resign',
+                desc: 'Opinium poll: 55% of the public think Starmer should resign as Labour leader. Only 23% say stay. Even 37% of people who voted Labour want him gone.',
+                tags: ['polls']
+            },
+            {
+                date: '2026-02-09',
+                title: 'Pound Falls on Political Crisis',
+                desc: 'Sterling fell 0.5% against the euro to its weakest since 22 January. UK gilts sold off, 10-year and 30-year yields rising. ING flagged risks as markets priced in political chaos.',
+                tags: ['economic']
+            },
+            {
+                date: '2026-02-09',
+                title: 'Polymarket: 68% Chance Starmer Out by June',
+                desc: 'Betting odds for Starmer being removed by June 30 surged to 68%, up from 35% at the start of the year. Over $4 million traded on the market.',
+                tags: ['polls', 'crisis']
+            },
+            {
+                date: '2026-02-09',
+                title: 'British Airways: 16 Cancellations, 330+ Delays',
+                desc: 'BA\'s worst operational day of 2026 at Heathrow T5. Over 330 flight delays and 16 cancellations, stranding up to 5,000 passengers. Not directly the government\'s fault but it\'s the vibe.',
+                tags: ['failure']
+            },
+            {
+                date: '2026-02-09',
+                title: 'Emergency Meeting with Labour MPs',
+                desc: 'Starmer held an emergency meeting, vowing he\'d "won every fight I\'ve ever been in." One loyalist described PMQs as a "car crash" with an "end of days feel."',
+                tags: ['crisis']
+            },
+            {
+                date: '2026-02-10',
+                title: 'Joint Acting Chiefs of Staff Appointed',
+                desc: 'Starmer hastily appointed two people to share the chief of staff role — Jill Cuthbertson and Vidhya Alakeson. A "joint acting" arrangement. Very normal, very stable.',
+                tags: ['crisis']
+            },
+            {
+                date: '2026-02-10',
+                title: 'The Economist: "Most Unpopular PM on Record"',
+                desc: 'Axios featured Starmer alongside Macron as historically unpopular European leaders. Morning Consult put him at 23% approval. The Economist called him the most unpopular British PM on record.',
+                tags: ['polls']
+            },
+            {
+                date: '2026-02-10',
+                title: '"Sword of Damocles" Warning Over Gilts',
+                desc: 'CNBC reported investors warning the political standoff threatens the bond market, with gilts "subject to the whims of random political headlines." The markets are watching.',
+                tags: ['economic']
+            },
+            {
+                date: '2026-02-10',
+                title: 'Labour Insiders: "Buy Rayner, Sell Streeting"',
+                desc: 'Bloomberg reported Labour insiders openly gaming leadership succession scenarios while Starmer clings on. Not even pretending to support the leader any more.',
+                tags: ['crisis', 'rebellion']
+            },
+            {
+                date: '2026-02-10',
+                title: 'Labour Polling: 19% — Third Place',
+                desc: 'YouGov has Labour at 19%, behind Reform (26%) and the Conservatives (18% but closing). An MRP projection has Reform winning 381 seats at a general election.',
+                tags: ['polls']
+            },
+            {
+                date: '2026-02-10',
+                title: 'Gorton By-Election: Labour Set to Lose Another Heartland Seat',
+                desc: 'Polls show Reform at 32%, Labour at 26% for the 26 Feb by-election. Labour blocked Andy Burnham from standing, angering the base. They\'ve held the seat since 1974.',
+                tags: ['polls', 'failure']
+            }
+        ];
+
+        const tagConfig = {
+            'scandal':        { label: '🔥 Scandal',        class: 'tag-scandal' },
+            'uturn':          { label: '🔄 U-Turn',          class: 'tag-uturn' },
+            'resignation':    { label: '🚪 Resignation',     class: 'tag-resignation' },
+            'broken-promise': { label: '🤥 Broken Promise',  class: 'tag-broken-promise' },
+            'failure':        { label: '💀 Failure',          class: 'tag-failure' },
+            'polls':          { label: '📉 Polls',            class: 'tag-polls' },
+            'economic':       { label: '💸 Economic',         class: 'tag-economic' },
+            'security':       { label: '🔓 Security',         class: 'tag-security' },
+            'hypocrisy':      { label: '🪞 Hypocrisy',       class: 'tag-hypocrisy' },
+            'crisis':         { label: '🚨 Crisis',           class: 'tag-crisis' },
+            'press':          { label: '📰 Press',            class: 'tag-press' },
+            'rebellion':      { label: '✊ Rebellion',         class: 'tag-rebellion' }
+        };
+
+        // ─── Timer ───
+        function updateTimer() {
+            const now = new Date();
+            const diff = now - SEAN_LEFT;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+            const el = document.getElementById('timer');
+            if (days === 0) {
+                el.innerHTML = `<span>${hours}</span>h <span>${mins}</span>m <span>${secs}</span>s`;
+            } else {
+                el.innerHTML = `<span>${days}</span> day${days !== 1 ? 's' : ''}, ${hours}h ${mins}m ${secs}s`;
+            }
+
+            const sub = document.getElementById('timer-sub');
+            if (days < 1) {
+                sub.textContent = `Not even a full day yet`;
+            } else if (days < 7) {
+                sub.textContent = `${days} day${days !== 1 ? 's' : ''} of absolute scenes`;
+            } else {
+                const weeks = (days / 7).toFixed(1);
+                sub.textContent = `That's ${weeks} weeks of absolute scenes`;
+            }
+
+            // Rate line
+            const totalDays = diff / (1000 * 60 * 60 * 24);
+            const rateLine = document.getElementById('rate-line');
+            if (totalDays >= 1) {
+                const perDay = (events.length / totalDays).toFixed(1);
+                const hoursPerEvent = (totalDays * 24 / events.length).toFixed(1);
+                rateLine.innerHTML = `<strong>${events.length}</strong> incidents in <strong>${days}</strong> day${days !== 1 ? 's' : ''}. That's one every <strong>${hoursPerEvent}</strong> hours.`;
+            } else {
+                const totalHours = diff / (1000 * 60 * 60);
+                const minsPerEvent = (totalHours * 60 / events.length).toFixed(0);
+                rateLine.innerHTML = `<strong>${events.length}</strong> incidents in <strong>${hours}</strong> hours. That's one every <strong>${minsPerEvent}</strong> minutes.`;
+            }
+        }
+
+        // ─── Counters ───
+        function buildCounters() {
+            const counts = {};
+            events.forEach(e => e.tags.forEach(t => counts[t] = (counts[t] || 0) + 1));
+            const grid = document.getElementById('counter-grid');
+
+            // Total first
+            const totalBox = document.createElement('div');
+            totalBox.className = 'counter-box';
+            totalBox.innerHTML = `<div class="number">${events.length}</div><div class="label">Total</div>`;
+            grid.appendChild(totalBox);
+
+            // Then by count
+            Object.entries(counts)
+                .sort((a, b) => b[1] - a[1])
+                .forEach(([tag, count]) => {
+                    const box = document.createElement('div');
+                    box.className = 'counter-box';
+                    box.innerHTML = `<div class="number">${count}</div><div class="label">${tagConfig[tag]?.label || tag}</div>`;
+                    grid.appendChild(box);
+                });
+        }
+
+        // ─── Filter bar ───
+        function buildFilters() {
+            const bar = document.getElementById('filter-bar');
+            const counts = {};
+            events.forEach(e => e.tags.forEach(t => counts[t] = (counts[t] || 0) + 1));
+
+            Object.entries(counts)
+                .sort((a, b) => b[1] - a[1])
+                .forEach(([tag, count]) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'filter-btn';
+                    btn.dataset.filter = tag;
+                    btn.innerHTML = `${tagConfig[tag]?.label || tag} <span class="count">${count}</span>`;
+                    btn.addEventListener('click', () => filterEvents(tag, btn));
+                    bar.appendChild(btn);
+                });
+        }
+
+        let activeFilter = 'all';
+
+        function filterEvents(filter, btn) {
+            activeFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            else document.querySelector('[data-filter="all"]').classList.add('active');
+            renderTimeline();
+        }
+
+        document.querySelector('[data-filter="all"]').addEventListener('click', () => {
+            filterEvents('all', null);
+            document.querySelector('[data-filter="all"]').classList.add('active');
+        });
+
+        // ─── Timeline ───
+        function renderTimeline() {
+            const timeline = document.getElementById('timeline');
+            timeline.innerHTML = '';
+
+            const filtered = activeFilter === 'all'
+                ? events
+                : events.filter(e => e.tags.includes(activeFilter));
+
+            const sorted = [...filtered].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'];
+
+            let currentDay = '';
+
+            sorted.forEach(event => {
+                const d = new Date(event.date);
+                const dayKey = event.date;
+
+                if (dayKey !== currentDay) {
+                    currentDay = dayKey;
+                    const dayEvents = sorted.filter(e => e.date === dayKey);
+
+                    // Calculate "Day X" since Sean left
+                    const diff = d - SEAN_LEFT;
+                    const dayNum = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const dayLabel = dayNum === 0 ? 'Day Zero' : `Day ${dayNum}`;
+
+                    const header = document.createElement('div');
+                    header.className = 'day-header';
+                    header.innerHTML = `<h2>${dayNames[d.getDay()]} ${d.getDate()} ${monthNames[d.getMonth()]} <span class="day-count">${dayLabel} · ${dayEvents.length} incident${dayEvents.length !== 1 ? 's' : ''}</span></h2>`;
+                    timeline.appendChild(header);
+                }
+
+                const card = document.createElement('div');
+                card.className = 'event-card';
+                card.innerHTML = `
+                    <div class="event-top">
+                        <div class="event-title">${event.title}</div>
+                    </div>
+                    <div class="event-desc">${event.desc}</div>
+                    <div class="event-tags">
+                        ${event.tags.map(t => `<span class="tag ${tagConfig[t]?.class || ''}">${tagConfig[t]?.label || t}</span>`).join('')}
+                    </div>
+                `;
+                timeline.appendChild(card);
+            });
+        }
+
+        // ─── Init ───
+        updateTimer();
+        setInterval(updateTimer, 1000);
+        buildCounters();
+        buildFilters();
+        renderTimeline();
+    </script>
+</body>
+</html>
